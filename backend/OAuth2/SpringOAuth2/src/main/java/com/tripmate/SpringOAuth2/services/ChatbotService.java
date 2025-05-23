@@ -12,7 +12,13 @@ public class ChatbotService {
     }
 
     public String getResponse(String userInput) {
-        Content content = model.generateContent("As Tripmate travel assistant: " + userInput);
-        return content.getText();
+        try {
+            Content content = model.generateContent("As Tripmate travel assistant: " + userInput);
+            return content.getText();
+        } catch (Exception e) {
+            // Log the exception and return a fallback response
+            System.err.println("Error generating content: " + e.getMessage());
+            return "I'm sorry, I couldn't process your request at the moment. Please try again later.";
+        }
     }
 }
