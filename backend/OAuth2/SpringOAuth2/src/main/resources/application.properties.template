@@ -8,3 +8,4 @@ spring.security.oauth2.client.registration.github.client-id=${GITHUB_CLIENT_ID}
 spring.security.oauth2.client.registration.github.client-secret=${GITHUB_CLIENT_SECRET}
 
 server.port=8080
+geoapify.api.key=c9957e3d9add481d86686865b7bc5282
