@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: langchain-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host=0.0.0.0 --port=8000
+    envVars:
+      - key: GROQ_API_KEY
+        value: sk_XCbx4vUTmoiTmuJX5pHeWGdyb3FYw4NjNoEi8peaXG218ZXU30fu

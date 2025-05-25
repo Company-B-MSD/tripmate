@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+langchain-groq
+pypdf
+python-multipart
+python-dotenv
+tqdm
+requests
+beautifulsoup4
+html2text
+playwright
+sentence-transformers
+langchain>=0.2
+langchain-community>=0.0.19
+langchain-huggingface>=0.0.1
+faiss-cpu
+sentence-transformers
