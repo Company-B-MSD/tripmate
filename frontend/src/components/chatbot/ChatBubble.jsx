@@ -14,47 +14,52 @@ const ChatBubble = () => {
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+
 
     // Add user message
-    const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-
-    const user_message = input; // Store user message for processing
-
-    try {
-      // Here you would integrate with your AI backend
-      // This is a placeholder response
-      setTimeout(() => {
+    const handleSendMessage = async (e) => {
+      e.preventDefault();
+      if (!input.trim()) return;
+    
+      // Store user message before resetting input
+      const userMessage = { role: 'user', content: input };
+      const messageContent = input.trim(); // Store for API processing
+      
+      // Add user message to state
+      setMessages(prev => [...prev, userMessage]);
+      setInput('');
+      setIsLoading(true);
+    
+      try {
+        // Call the backend API
+        const response = await fetch('http://localhost:8080/api/chat', {
+          method: 'POST',
+          body: JSON.stringify({ message: messageContent }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // The response format should match what your backend sends
         const aiResponse = { 
           role: 'system', 
-          content: `Thanks for your message about "${input}". I'm your TripMate assistant and would be happy to help with information about Sri Lanka's destinations and travel tips.`
+          content: data.reply // Adjust this based on your actual response format
         };
+        
         setMessages(prev => [...prev, aiResponse]);
         setIsLoading(false);
-      }, 1000);
-      
-      // Replace the above with your actual API call:
-      // const response = await fetch('/api/chat', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ message: input }),
-      //   headers: { 'Content-Type': 'application/json' }
-      // });
-      // const data = await response.json();
-      // setMessages(prev => [...prev, { role: 'system', content: data.reply }]);
-      
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setMessages(prev => [...prev, { 
-        role: 'system', 
-        content: 'Sorry, I encountered an error. Please try again later.' 
-      }]);
-      setIsLoading(false);
-    }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setMessages(prev => [...prev, { 
+          role: 'system', 
+          content: 'Sorry, I encountered an error. Please try again later.' 
+        }]);
+        setIsLoading(false);
+      }
   };
 
   // Auto-scroll to bottom when messages change
