@@ -6,98 +6,64 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Clean white background */
-    --foreground: 222.2 84% 4.9%; /* Default dark text */
+    --background: 220 14% 12%;
+    --foreground: 36 40% 80%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 14% 16%;
+    --card-foreground: 36 40% 80%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 36 40% 80%;
 
-    --primary: 207 70% 53%; /* Calming blue #3498db */
-    --primary-foreground: 0 0% 100%; /* White text on primary blue */
+    /* Golden primary */
+    --primary: 36 60% 55%;
+    --primary-foreground: 220 14% 12%;
 
-    --secondary: 210 40% 96.1%; 
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Darker gold for secondary */
+    --secondary: 36 40% 35%;
+    --secondary-foreground: 36 40% 90%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted grays */
+    --muted: 220 14% 20%;
+    --muted-foreground: 220 14% 65%;
 
-    --accent: 28 80% 52%; /* Warm orange #e67e22 */
-    --accent-foreground: 0 0% 100%; /* White text on accent orange */
+    /* Light gold accent */
+    --accent: 36 70% 65%;
+    --accent-foreground: 220 14% 12%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Deep red for destructive actions */
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 207 70% 53%; /* Blue for focus rings */
+    /* Border and input colors */
+    --border: 220 14% 22%;
+    --input: 220 14% 22%;
+    --ring: 36 60% 55%;
 
     --radius: 0.5rem;
-    
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-
-    --font-geist-sans: 'Geist', sans-serif;
-    --font-geist-mono: 'Geist Mono', monospace;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 207 70% 53%; 
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 28 80% 52%; 
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 207 70% 53%;
-    
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Use same values for dark mode since we want it dark by default */
+    --background: 220 14% 12%;
+    --foreground: 36 40% 80%;
+    --card: 220 14% 16%;
+    --card-foreground: 36 40% 80%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 36 40% 80%;
+    --primary: 36 60% 55%;
+    --primary-foreground: 220 14% 12%;
+    --secondary: 36 40% 35%;
+    --secondary-foreground: 36 40% 90%;
+    --muted: 220 14% 20%;
+    --muted-foreground: 220 14% 65%;
+    --accent: 36 70% 65%;
+    --accent-foreground: 220 14% 12%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 14% 22%;
+    --input: 220 14% 22%;
+    --ring: 36 60% 55%;
   }
 }
 
@@ -224,4 +190,133 @@
 
 .animate-glow {
   animation: glow 4s ease-in-out infinite;
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, 
+    rgba(17, 17, 17, 0.9),
+    rgba(34, 34, 34, 0.9)
+  );
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 0.8),  /* Blue */
+    rgba(230, 126, 34, 0.8),  /* Orange */
+    rgba(52, 152, 219, 0.8)   /* Blue */
+  );
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 1),    /* Bright Blue */
+    rgba(230, 126, 34, 1),    /* Bright Orange */
+    rgba(52, 152, 219, 1)     /* Bright Blue */
+  );
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, 
+    rgba(17, 17, 17, 0.95),
+    rgba(34, 34, 34, 0.95)
+  );
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 0.8),  /* Blue */
+    rgba(230, 126, 34, 0.8),  /* Orange */
+    rgba(52, 152, 219, 0.8)   /* Blue */
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 1),    /* Bright Blue */
+    rgba(230, 126, 34, 1),    /* Bright Orange */
+    rgba(52, 152, 219, 1)     /* Bright Blue */
+  );
+  box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 235, 238, 0.453) rgba(17, 17, 17, 0.9);
+}
+
+.dark * {
+  scrollbar-color: rgba(222, 232, 239, 0.097) rgba(17, 17, 17, 0.9);
+}
+
+/* Scrollbar Animation */
+@keyframes scrollbarGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5),
+                0 0 10px rgba(230, 126, 34, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.8),
+                0 0 20px rgba(230, 126, 34, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5),
+                0 0 10px rgba(230, 126, 34, 0.3);
+  }
+}
+
+::-webkit-scrollbar-thumb:active {
+  animation: scrollbarGlow 2s infinite;
+}
+
+/* Custom scrollbar for specific elements */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(52, 152, 219, 0.8) rgba(17, 17, 17, 0.9);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, 
+    rgba(17, 17, 17, 0.95),
+    rgba(34, 34, 34, 0.95)
+  );
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 0.7),
+    rgba(230, 126, 34, 0.7)
+  );
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, 
+    rgba(52, 152, 219, 0.9),
+    rgba(230, 126, 34, 0.9)
+  );
+  box-shadow: 0 0 12px rgba(52, 152, 219, 0.6),
+              0 0 8px rgba(230, 126, 34, 0.4);
 }

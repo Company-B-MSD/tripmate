@@ -41,6 +41,7 @@ const ChatBubble = () => {
           setMessages(prev => [...prev, aiResponse]);
           setIsLoading(false);
         }, 1000);
+
       
       // Replace the above with your actual API call:
       // const response = await fetch('/api/chat', {
