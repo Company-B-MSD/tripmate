@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,16 @@ export default function AiInsightsSection() {
   const [insights, setInsights] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const timerRef = useRef(null);
+
+  // Clean up any pending timers when component unmounts
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   const fetchInsights = async () => {
     setLoading(true);
@@ -19,7 +29,7 @@ export default function AiInsightsSection() {
       // setInsights(data.analysis);
       
       // For demonstration purposes, we'll simulate a response
-      setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setInsights(`Based on your trip preferences to Sri Lanka, here are some recommendations:
 
 • Sigiriya Rock Fortress is best visited early morning to avoid crowds and heat
