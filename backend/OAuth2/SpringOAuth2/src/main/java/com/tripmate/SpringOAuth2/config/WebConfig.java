@@ -62,6 +62,7 @@ public class WebConfig {
             .and()
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/trips/**").permitAll()
+                .requestMatchers("/api/ai/**").permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf.disable());

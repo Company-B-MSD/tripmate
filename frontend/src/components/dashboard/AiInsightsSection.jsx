@@ -11,6 +11,9 @@ export default function AiInsightsSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const timerRef = useRef(null);
+  
+  // Base URL - update this to match your backend URL in development
+  const API_BASE_URL = 'http://localhost:8080'; // Add your actual backend URL
 
   // Auto-fetch insights when component mounts
   useEffect(() => {
@@ -28,8 +31,15 @@ export default function AiInsightsSection() {
     setError(null);
     
     try {
-      // Fetch insights from the backend API
-      const response = await fetch('/api/ai/insights');
+      // Fetch insights from the backend API with the correct URL
+      const response = await fetch(`${API_BASE_URL}/api/ai/insights`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Include credentials if you need authentication
+        credentials: 'include'
+      });
       
       if (!response.ok) {
         throw new Error(`Server responded with status: ${response.status}`);
@@ -38,7 +48,9 @@ export default function AiInsightsSection() {
       const data = await response.json();
       
       if (data.analysis) {
-        setInsights(data.analysis);
+        // Process insights - replace $ separators if needed
+        const processedInsights = data.analysis.split('$').join('\n\n• ');
+        setInsights(processedInsights.startsWith('• ') ? processedInsights : `• ${processedInsights}`);
       } else if (data.message) {
         // Handle case where there are no trips
         setInsights(data.message);
@@ -62,7 +74,13 @@ export default function AiInsightsSection() {
   const fetchTripDetails = async () => {
     try {
       // Try to get the latest trip's insights directly
-      const response = await fetch('/api/trips/latest/insights');
+      const response = await fetch(`${API_BASE_URL}/api/trips/latest/insights`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
       
       if (response.ok) {
         const data = await response.json();
@@ -76,13 +94,22 @@ export default function AiInsightsSection() {
       }
       
       // Fallback to fetching trips and then getting insights
-      const tripsResponse = await fetch('/api/trips');
+      const tripsResponse = await fetch(`${API_BASE_URL}/api/trips`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      
       if (!tripsResponse.ok) {
+        console.error('Failed to fetch trips:', tripsResponse.status);
         return;
       }
       
       const trips = await tripsResponse.json();
       if (!Array.isArray(trips) || trips.length === 0) {
+        console.log('No trips found');
         return;
       }
       
@@ -90,7 +117,14 @@ export default function AiInsightsSection() {
       const latestIndex = trips.length - 1;
       
       // Get recommendations
-      const recommendationsResponse = await fetch(`/api/ai/recommendations/${latestIndex}`);
+      const recommendationsResponse = await fetch(`${API_BASE_URL}/api/ai/recommendations/${latestIndex}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      
       if (recommendationsResponse.ok) {
         const recData = await recommendationsResponse.json();
         if (recData.recommendations) {
@@ -99,7 +133,14 @@ export default function AiInsightsSection() {
       }
       
       // Get itinerary
-      const itineraryResponse = await fetch(`/api/ai/itinerary/${latestIndex}`);
+      const itineraryResponse = await fetch(`${API_BASE_URL}/api/ai/itinerary/${latestIndex}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      
       if (itineraryResponse.ok) {
         const itineraryData = await itineraryResponse.json();
         if (itineraryData.itinerary) {
@@ -112,6 +153,7 @@ export default function AiInsightsSection() {
     }
   };
 
+  // The rest of your component remains the same
   return (
     <Card className="overflow-hidden border-2 border-primary/10 shadow-lg hover:shadow-xl transition-all duration-300">
       <CardHeader className="bg-primary/5 pb-2 pt-4">
