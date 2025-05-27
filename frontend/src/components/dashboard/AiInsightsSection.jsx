@@ -2,9 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AiInsightsSection() {
   const [insights, setInsights] = useState('');
+  const [recommendations, setRecommendations] = useState('');
+  const [itinerary, setItinerary] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const timerRef = useRef(null);
@@ -23,27 +26,62 @@ export default function AiInsightsSection() {
     setError(null);
     
     try {
-      // In a real implementation, this would fetch from your backend API
-      // const response = await fetch('/api/ai/analyze');
-      // const data = await response.json();
-      // setInsights(data.analysis);
+      // Fetch insights from the backend API
+      const response = await fetch('/api/ai/insights');
       
-      // For demonstration purposes, we'll simulate a response
-      timerRef.current = setTimeout(() => {
-        setInsights(`Based on your trip preferences to Sri Lanka, here are some recommendations:
-
-• Sigiriya Rock Fortress is best visited early morning to avoid crowds and heat
-• Consider adding Ella's Nine Arch Bridge to your itinerary - perfect for photography
-• The train journey from Kandy to Ella is considered one of the most scenic in the world
-• Mirissa offers excellent whale watching opportunities between November and April
-• Local street food markets in Colombo provide authentic culinary experiences at affordable prices
-
-Your planned travel season aligns well with dry conditions in the Cultural Triangle region. Don't forget to pack lightweight clothing and rain protection for unexpected showers!`);
-        setLoading(false);
-      }, 1500);
-    } catch (err) {
-      setError('Failed to fetch AI insights. Please try again.');
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.analysis) {
+        setInsights(data.analysis);
+      } else if (data.message) {
+        // Handle case where there are no trips
+        setInsights(data.message);
+      } else if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Fetch recommendations and itinerary if there are trips
+      if (data.tripCount && data.tripCount > 0) {
+        fetchTripDetails();
+      }
+      
       setLoading(false);
+    } catch (err) {
+      console.error('Error fetching AI insights:', err);
+      setError(`Failed to fetch AI insights: ${err.message}`);
+      setLoading(false);
+    }
+  };
+  
+  const fetchTripDetails = async () => {
+    try {
+      // Fetch the latest trip's recommendations and itinerary
+      const response = await fetch('/api/trips');
+      
+      if (!response.ok) {
+        return; // Just skip if this fails
+      }
+      
+      const data = await response.json();
+      if (data.recommendations) {
+        setRecommendations(data.recommendations);
+      }
+      
+      // Get itinerary
+      const itineraryResponse = await fetch('/api/ai/itinerary/0');
+      if (itineraryResponse.ok) {
+        const itineraryData = await itineraryResponse.json();
+        if (itineraryData.itinerary) {
+          setItinerary(itineraryData.itinerary);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching trip details:', err);
+      // Don't set error here, we still want to show insights
     }
   };
 
@@ -96,11 +134,31 @@ Your planned travel season aligns well with dry conditions in the Cultural Trian
         )}
         
         {insights && !loading && (
-          <div className="prose prose-sm max-w-none">
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 whitespace-pre-line">
-              {insights}
-            </div>
-          </div>
+          <Tabs defaultValue="insights" className="w-full">
+            <TabsList className="grid grid-cols-3 mb-4">
+              <TabsTrigger value="insights">Trip Analysis</TabsTrigger>
+              <TabsTrigger value="recommendations" disabled={!recommendations}>Recommendations</TabsTrigger>
+              <TabsTrigger value="itinerary" disabled={!itinerary}>Suggested Itinerary</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="insights" className="prose prose-sm max-w-none">
+              <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 whitespace-pre-line">
+                {insights}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="recommendations" className="prose prose-sm max-w-none">
+              <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 whitespace-pre-line">
+                {recommendations}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="itinerary" className="prose prose-sm max-w-none">
+              <div className="bg-primary/5 p-4 rounded-lg border border-primary/10 whitespace-pre-line">
+                {itinerary}
+              </div>
+            </TabsContent>
+          </Tabs>
         )}
       </CardContent>
     </Card>

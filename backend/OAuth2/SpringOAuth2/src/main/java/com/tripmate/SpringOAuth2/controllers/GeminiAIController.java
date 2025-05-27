@@ -97,4 +97,65 @@ public class GeminiAIController {
             return CompletableFuture.completedFuture(ResponseEntity.internalServerError().build());
         }
     }
+    
+    @GetMapping("/insights")
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> getFormattedInsights() {
+        ResponseEntity<List<Trip>> tripsResponse = tripController.getAllTrips();
+        
+        if (tripsResponse.getStatusCode().is2xxSuccessful() && tripsResponse.getBody() != null) {
+            List<Trip> trips = tripsResponse.getBody();
+            if (trips.isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "No trips available for analysis. Create a trip first to get AI insights.");
+                return CompletableFuture.completedFuture(ResponseEntity.ok(response));
+            }
+            
+            return geminiAIService.analyzeTripData(trips)
+                    .thenApply(analysis -> {
+                        // Format the analysis text for better display
+                        String formattedAnalysis = analysis
+                                .replace("\n•", "\n• ")  // Add space after bullet points
+                                .replaceAll("\\*\\*(.*?)\\*\\*", "$1"); // Remove markdown formatting
+                        
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("analysis", formattedAnalysis);
+                        response.put("tripCount", trips.size());
+                        return ResponseEntity.ok(response);
+                    })
+                    .exceptionally(ex -> {
+                        Map<String, Object> errorResponse = new HashMap<>();
+                        errorResponse.put("error", "Failed to analyze trips: " + ex.getMessage());
+                        return ResponseEntity.internalServerError().body(errorResponse);
+                    });
+        } else {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to retrieve trips");
+            return CompletableFuture.completedFuture(ResponseEntity.internalServerError().body(errorResponse));
+        }
+    }
+    
+    @PostMapping("/insights/trip")
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> getInsightsForTrip(@RequestBody Trip trip) {
+        if (trip == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid trip data");
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(errorResponse));
+        }
+        
+        return geminiAIService.getTravelRecommendations(trip)
+                .thenCompose(recommendations -> 
+                    geminiAIService.generateItinerary(trip)
+                        .thenApply(itinerary -> {
+                            Map<String, Object> response = new HashMap<>();
+                            response.put("recommendations", recommendations);
+                            response.put("itinerary", itinerary);
+                            return ResponseEntity.ok(response);
+                        })
+                )
+                .exceptionally(ex -> {
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put("error", "Failed to generate insights: " + ex.getMessage());
+                    return ResponseEntity.internalServerError().body(errorResponse);
+                });
+    }
 }

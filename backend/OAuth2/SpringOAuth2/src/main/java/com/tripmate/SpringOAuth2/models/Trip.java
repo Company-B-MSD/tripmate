@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Trip {
+    private Long id;
     private String startLocation;
     private List<String> stops;
     private String endLocation;
@@ -21,8 +22,11 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(String startLocation, List<String> stops, String endLocation, int numberOfTravelers, 
+    public Trip(Long id,String startLocation, List<String> stops, String endLocation, int numberOfTravelers, 
                LocalDate startDate, LocalDate endDate, double budget) {
+    //public Trip(, String startingLocation, List<String> stops, String finalDestination, 
+    //                int travelers, double budget, String startDate, String endDate) {
+        this.id=id;
         this.startLocation = startLocation;
         this.stops = stops;
         this.endLocation = endLocation;
@@ -30,6 +34,16 @@ public class Trip {
         this.startDate = startDate;
         this.endDate = endDate;
         this.budget = budget;
+
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getStartLocation() {
@@ -88,3 +102,4 @@ public class Trip {
         this.budget = budget;
     }
 }
+
