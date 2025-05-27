@@ -21,7 +21,7 @@ export default function PolonnaruwaPage() {
     description: 'Polonnaruwa, a UNESCO World Heritage site, reveals ancient Sri Lankan grandeur through its remarkably preserved ruins of palaces, temples, and statues.',
     image: '/destinations/Polonnaruwa/cover.JPG',
     gallery: [
-      '/destinations/Polonnaruwa/king.jpeg',
+      '/destinations/Polonnaruwa/cover.JPG',
       '/destinations/Polonnaruwa/lake.jpeg',
       '/destinations/Polonnaruwa/pic.jpeg',
     ],

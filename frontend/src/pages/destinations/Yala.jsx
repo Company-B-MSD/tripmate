@@ -19,7 +19,7 @@ export default function YalaPage() {
       to: 70,
     },
     description: 'Yala National Park, a wildlife haven, boasts diverse ecosystems, high leopard density, and abundant elephants, promising thrilling safaris.',
-    image: '/destinations/Yala/lepcov.jpg',
+    image: '/destinations/Yala/elephants.jpg',
     gallery: [
       '/destinations/Yala/bear.jpg',
       '/destinations/Yala/deer.jpg',

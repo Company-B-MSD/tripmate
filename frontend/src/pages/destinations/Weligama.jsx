@@ -19,7 +19,7 @@ export default function WeligamaPage() {
       to: 300,
     },
     description: 'Weligama, a scenic Sri Lankan town, offers beautiful beaches, heritage sites, local cuisine, and unique attractions, making it a perfect spot for relaxation and adventure.',
-    image: '/destinations/Weligama/weligama.jpg',
+    image: '/destinations/Weligama/wel.jpg',
     gallery: [
       '/destinations/Weligama/rock.jpg',
       '/destinations/Weligama/hotels.jpg',

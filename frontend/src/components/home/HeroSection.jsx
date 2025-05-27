@@ -13,10 +13,10 @@ export default function HeroSection() {
     '/images/col1.jpg',
     '/images/col3.jpg',
     '/images/col4.jpg',
-    '/images/col5.jpg',
+    '/images/col44.jpg',
     '/images/col6.jpg',
     '/images/col7.jpg',
-    '/images/col8.jpg',
+    '/images/siri1.jpeg',
     '/images/col9.jpg',
   ];
 

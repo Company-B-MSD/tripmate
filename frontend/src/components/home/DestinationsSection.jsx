@@ -15,7 +15,7 @@ const destinations = [
 	{
 		name: "Weligama",
 		description: "Enjoying the sea breeze with spellbinding memories",
-		image: "/destinations/Weligama/weligama.jpg",
+		image: "/destinations/Weligama/cape.jpg",
 		aiHint: "Weligama beach",
 		path: "/destinations/weligama", // Add this path
 	},
@@ -36,7 +36,7 @@ const destinations = [
 	},
 	{
 		name: "Colombo",
-		description: "Colombo blends colonial charm with modern vibrancy, offering bustling markets, serene temples, and coastal beauty. It's a city of captivating contrasts.",
+		description: "Colombo blends history, culture, and coastal charm in Sri Lanka.",
 		image: "/destinations/Colombo/cover.jpg",
 		aiHint: "colombo city",
 		path: "/destinations/colombo", // Add this path
@@ -52,7 +52,7 @@ const destinations = [
 	{
 		name: "Yala",
 		description:
-			"Visit the nature life of Sri lanka",
+			"Visit the nature life of Sri lanka, the pure lives of mother nature",
 		image: "/destinations/Yala/lepcov.jpg",
 		aiHint: "Yala park",
 		path: "/destinations/yala", // Add this path
@@ -61,7 +61,7 @@ const destinations = [
 		name: "Polonnaruwa",
 		description:
 			"Journey through ancient Polonnaruwa's sacred grounds",
-		image: "/destinations/Polonnaruwa/cover.JPG",
+		image: "/destinations/Polonnaruwa/pol.png",
 		aiHint: "Polonnaruwa",
 		path: "/destinations/polonnaruwa", // Add this path
 	},
