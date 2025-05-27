@@ -29,7 +29,7 @@ public class GeminiAIController {
         this.restTemplate = new RestTemplate();
     }
 
-    // ...existing code...
+ 
 
     @GetMapping("/fetch-trips")
     public ResponseEntity<Map<String, Object>> fetchTripsData() {
