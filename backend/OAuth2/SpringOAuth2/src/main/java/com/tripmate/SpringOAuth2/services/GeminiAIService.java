@@ -110,33 +110,36 @@ public class GeminiAIService {
     /**
      * Builds a detailed prompt for travel recommendations based on trip data
      */
-    private String buildTripPrompt(Trip trip) {
-        long tripDays = ChronoUnit.DAYS.between(trip.getStartDate(), trip.getEndDate()) + 1;
-        
-        StringBuilder promptBuilder = new StringBuilder();
-        promptBuilder.append("As a travel expert, please provide detailed travel recommendations for the following trip:\n\n");
-        promptBuilder.append("- Starting Location: ").append(trip.getStartLocation()).append("\n");
-        
-        if (trip.getStops() != null && !trip.getStops().isEmpty()) {
-            promptBuilder.append("- Stops Along the Way: ").append(String.join(", ", trip.getStops())).append("\n");
-        }
-        
-        promptBuilder.append("- Final Destination: ").append(trip.getEndLocation()).append("\n");
-        promptBuilder.append("- Number of Travelers: ").append(trip.getNumberOfTravelers()).append("\n");
-        promptBuilder.append("- Trip Budget: $").append(trip.getBudget()).append("\n");
-        promptBuilder.append("- Trip Duration: ").append(tripDays).append(" days (")
-                    .append(trip.getStartDate()).append(" to ")
-                    .append(trip.getEndDate()).append(")\n\n");
-        
-        promptBuilder.append("Please include:\n");
-        promptBuilder.append("1. Recommended mode(s) of transportation\n");
-        promptBuilder.append("2. Must-see attractions at each location\n");
-        promptBuilder.append("3. Dining recommendations that fit within the budget\n");
-        promptBuilder.append("4. Accommodation suggestions\n");
-        promptBuilder.append("5. Tips to enhance the travel experience\n");
-        
-        return promptBuilder.toString();
+/**
+ * Builds a prompt for concise travel recommendations based on trip data
+ */
+private String buildTripPrompt(Trip trip) {
+    long tripDays = ChronoUnit.DAYS.between(trip.getStartDate(), trip.getEndDate()) + 1;
+    
+    StringBuilder promptBuilder = new StringBuilder();
+    promptBuilder.append("As a travel expert, provide brief travel recommendations for this trip. Keep your response short and sweet without any bold formatting:\n\n");
+    promptBuilder.append("- Starting Location: ").append(trip.getStartLocation()).append("\n");
+    
+    if (trip.getStops() != null && !trip.getStops().isEmpty()) {
+        promptBuilder.append("- Stops: ").append(String.join(", ", trip.getStops())).append("\n");
     }
+    
+    promptBuilder.append("- Final Destination: ").append(trip.getEndLocation()).append("\n");
+    promptBuilder.append("- Travelers: ").append(trip.getNumberOfTravelers()).append("\n");
+    promptBuilder.append("- Budget: $").append(trip.getBudget()).append("\n");
+    promptBuilder.append("- Duration: ").append(tripDays).append(" days\n\n");
+    
+    promptBuilder.append("Briefly list (no more than 1 sentence each):\n");
+    promptBuilder.append("1. Best transportation option\n");
+    promptBuilder.append("2. Top attraction at each location\n");
+    promptBuilder.append("3. One budget-friendly restaurant\n");
+    promptBuilder.append("4. Recommended accommodation\n");
+    promptBuilder.append("5. One short travel tip\n\n");
+    
+    promptBuilder.append("IMPORTANT: Keep total response under 200 words. Use simple formatting only. Do NOT use bold text or lengthy descriptions. INCLUDE ONLY THE RECOMMENDATIONS!");
+    
+    return promptBuilder.toString();
+}
     
     /**
      * Builds a prompt for generating a detailed day-by-day itinerary
