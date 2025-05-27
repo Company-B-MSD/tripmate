@@ -12,8 +12,10 @@ export default function AiInsightsSection() {
   const [error, setError] = useState(null);
   const timerRef = useRef(null);
 
-  // Clean up any pending timers when component unmounts
+  // Auto-fetch insights when component mounts
   useEffect(() => {
+    fetchInsights();
+    
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -59,20 +61,45 @@ export default function AiInsightsSection() {
   
   const fetchTripDetails = async () => {
     try {
-      // Fetch the latest trip's recommendations and itinerary
-      const response = await fetch('/api/trips');
+      // Try to get the latest trip's insights directly
+      const response = await fetch('/api/trips/latest/insights');
       
-      if (!response.ok) {
-        return; // Just skip if this fails
+      if (response.ok) {
+        const data = await response.json();
+        if (data.recommendations) {
+          setRecommendations(data.recommendations);
+        }
+        if (data.itinerary) {
+          setItinerary(data.itinerary);
+        }
+        return;
       }
       
-      const data = await response.json();
-      if (data.recommendations) {
-        setRecommendations(data.recommendations);
+      // Fallback to fetching trips and then getting insights
+      const tripsResponse = await fetch('/api/trips');
+      if (!tripsResponse.ok) {
+        return;
+      }
+      
+      const trips = await tripsResponse.json();
+      if (!Array.isArray(trips) || trips.length === 0) {
+        return;
+      }
+      
+      // Get latest trip index
+      const latestIndex = trips.length - 1;
+      
+      // Get recommendations
+      const recommendationsResponse = await fetch(`/api/ai/recommendations/${latestIndex}`);
+      if (recommendationsResponse.ok) {
+        const recData = await recommendationsResponse.json();
+        if (recData.recommendations) {
+          setRecommendations(recData.recommendations);
+        }
       }
       
       // Get itinerary
-      const itineraryResponse = await fetch('/api/ai/itinerary/0');
+      const itineraryResponse = await fetch(`/api/ai/itinerary/${latestIndex}`);
       if (itineraryResponse.ok) {
         const itineraryData = await itineraryResponse.json();
         if (itineraryData.itinerary) {
@@ -95,7 +122,7 @@ export default function AiInsightsSection() {
             </div>
             <CardTitle className="text-xl">AI Travel Insights</CardTitle>
           </div>
-          {!loading && insights && (
+          {!loading && (
             <Button 
               variant="ghost" 
               size="sm"

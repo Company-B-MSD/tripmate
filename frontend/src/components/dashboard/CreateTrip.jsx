@@ -54,93 +54,100 @@ const CreateTrip = () => {
     }
   };
 
-// Update the handleSaveTrip function
-const handleSaveTrip = async () => {
-  if (startDate && endDate && !endDate.isAfter(startDate)) {
-    setDateError('End date must be after start date');
-    return;
-  }
-
-  if (!startingLocation || !finalDestination) {
-    toast({
-      title: "Missing information",
-      description: "Please enter starting location and final destination.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  // Map frontend property names to match backend property names
-  const tripData = {
-    startLocation: startingLocation,  // Changed from startingLocation to startLocation
-    stops: stops.filter(stop => stop.trim() !== ''),
-    endLocation: finalDestination,    // Changed from finalDestination to endLocation
-    numberOfTravelers: travelers,     // Changed from travelers to numberOfTravelers
-    budget,
-    startDate: startDate ? startDate.format('YYYY-MM-DD') : null,
-    endDate: endDate ? endDate.format('YYYY-MM-DD') : null
-  };
-
-  try {
-    console.log("Sending trip data:", tripData); // Debug log
-    
-    // Send trip data to backend with explicit no-cors mode
-    const response = await fetch('/api/trips', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(tripData),
-    });
-
-    console.log("Response status:", response.status); // Debug log
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Error response:", errorText);
-      throw new Error(`Server responded with status: ${response.status}`);
+  const handleSaveTrip = async () => {
+    if (startDate && endDate && !endDate.isAfter(startDate)) {
+      setDateError('End date must be after start date');
+      return;
     }
 
-    const savedTrip = await response.json();
-    console.log("Trip saved successfully:", savedTrip);  // Debug log
-    
-    toast({
-      title: "Success!",
-      description: "Trip created successfully",
-    });
+    if (!startingLocation || !finalDestination) {
+      toast({
+        title: "Missing information",
+        description: "Please enter starting location and final destination.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Reset form
-    setStartingLocation('');
-    setStops(['']);
-    setFinalDestination('');
-    setTravelers(1);
-    setBudget(0);
-    setStartDate(null);
-    setEndDate(null);
-    setDateError('');
+    setIsSubmitting(true);
 
-    // Navigate to dashboard
-    navigate('/dashboard');
-  } catch (error) {
-    console.error('Error saving trip:', error);
-    toast({
-      title: "Error",
-      description: `Failed to create trip: ${error.message}`,
-      variant: "destructive",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    // Map frontend property names to match backend property names
+    const tripData = {
+      startLocation: startingLocation,
+      stops: stops.filter(stop => stop.trim() !== ''),
+      endLocation: finalDestination,
+      numberOfTravelers: travelers,
+      budget,
+      startDate: startDate ? startDate.format('YYYY-MM-DD') : null,
+      endDate: endDate ? endDate.format('YYYY-MM-DD') : null
+    };
+
+    try {
+      console.log("Sending trip data:", tripData);
+      
+      // Send trip data to backend
+      const response = await fetch('http://localhost:8080/api/trips', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(tripData),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Trip created successfully:", result);
+      
+      toast({
+        title: "Success!",
+        description: "Trip created successfully! AI insights are being generated.",
+      });
+
+      // Reset form
+      setStartingLocation('');
+      setStops(['']);
+      setFinalDestination('');
+      setTravelers(1);
+      setBudget(0);
+      setStartDate(null);
+      setEndDate(null);
+      setDateError('');
+
+      // Navigate to dashboard
+      navigate('/dashboard');
+      
+      // Show additional success notification
+      toast({
+        title: "AI Processing",
+        description: "Your trip details are being analyzed by AI. Check the insights section shortly!",
+      });
+
+    } catch (error) {
+      console.error('Error saving trip:', error);
+      toast({
+        title: "Error",
+        description: `Failed to create trip: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Add budget field
   const handleBudgetChange = (e) => {
     const value = parseInt(e.target.value) || 0;
     setBudget(Math.max(0, value));
   };
+
+  // Rest of your component remains unchanged
+  // ...
 
   return (
     <div className="container mx-auto px-4 py-0">
