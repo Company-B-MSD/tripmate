@@ -12,6 +12,7 @@ import HomePage from '@/pages/HomePage';
 import AuthLayout from '@/pages/auth/AuthLayout';
 import SignInPage from '@/pages/auth/SignInPage';
 import SignUpPage from '@/pages/auth/SignUpPage';
+import OAuthSuccessRedirect from '@/pages/OAuthSuccessRedirect';
 
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import DashboardPage from '@/pages/DashboardPage';
@@ -25,6 +26,8 @@ import MirissaPage from '@/pages/destinations/Mirissa';
 import ColomboPage from '@/pages/destinations/Colombo';
 import KandyPage from './pages/destinations/Kandy';
 import PolonnaruwaPage from '@/pages/destinations/Polonnaruwa';
+import Planner from './pages/Planner';
+import BusinessPage from './pages/BusinessPage';
 
 
 export default function App() {
@@ -58,6 +61,8 @@ export default function App() {
             <Route path="/destinations/colombo" element={<ColomboPage />} />
             <Route path="/destinations/kandy" element={<KandyPage />} />
             <Route path="/destinations/polonnaruwa" element={<PolonnaruwaPage />} />
+            <Route path="/oauth-success" element={<OAuthSuccessRedirect />} />
+            <Route path="/business" element={<BusinessPage/>}/>
             
 
             <Route element={<AuthLayout />}>
@@ -75,6 +80,10 @@ export default function App() {
             <Route
               path="/account"
               element={<ProtectedRoute><AccountPage /></ProtectedRoute>}
+            />
+            <Route
+              path="/planner"
+              element={<ProtectedRoute><Planner /></ProtectedRoute>}
             />
           </Routes>
         </main>

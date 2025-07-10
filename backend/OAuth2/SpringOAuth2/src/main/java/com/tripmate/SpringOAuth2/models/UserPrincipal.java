@@ -23,7 +23,8 @@ public class UserPrincipal implements UserDetails{
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        // OAuth2 users might not have passwords
+        return user.getPassword() != null ? user.getPassword() : "";
     }
 
     @Override

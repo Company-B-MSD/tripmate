@@ -1,0 +1,115 @@
+# Enhanced User Profile Management Testing
+
+## Base URL
+@baseUrl = http://localhost:8080
+
+## Variables (Replace with actual values)
+@token = YOUR_JWT_TOKEN_HERE
+
+### 1. Register a new user
+POST {{baseUrl}}/api/register
+Content-Type: application/json
+
+{
+  "username": "profileuser",
+  "password": "password123",
+  "email": "profileuser@example.com",
+  "name": "Profile Test User"
+}
+
+### 2. Login to get JWT token
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "profileuser",
+  "password": "password123"
+}
+
+### 3. Get current user profile
+GET {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+
+### 4. Update user profile
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Profile Name",
+  "email": "updated.profile@example.com",
+  "profilePictureUrl": "https://example.com/avatar.jpg"
+}
+
+### 5. Get profile stats
+GET {{baseUrl}}/api/profile/stats
+Authorization: Bearer {{token}}
+
+### 6. Change password (for local users only)
+POST {{baseUrl}}/api/profile/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newpassword456",
+  "confirmPassword": "newpassword456"
+}
+
+### 7. Update profile with invalid email (should fail)
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "invalid-email-format"
+}
+
+### 8. Update profile with invalid name (should fail)
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+### 9. Delete account (CAREFUL!)
+DELETE {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "password": "newpassword456"
+}
+
+### OAuth2 User Profile Testing
+
+### 10. Test OAuth2 login (Google)
+# Visit: http://localhost:8080/oauth2/authorization/google
+# After successful login, you'll get redirected with a token
+
+### 11. Get OAuth2 user profile
+GET {{baseUrl}}/api/profile
+Authorization: Bearer YOUR_OAUTH2_TOKEN_HERE
+
+### 12. Update OAuth2 user profile
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer YOUR_OAUTH2_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "name": "Updated OAuth2 Name",
+  "profilePictureUrl": "https://example.com/new-avatar.jpg"
+}
+
+### 13. Try to change password for OAuth2 user (should fail)
+POST {{baseUrl}}/api/profile/change-password
+Authorization: Bearer YOUR_OAUTH2_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "currentPassword": "any",
+  "newPassword": "newpass123",
+  "confirmPassword": "newpass123"
+}

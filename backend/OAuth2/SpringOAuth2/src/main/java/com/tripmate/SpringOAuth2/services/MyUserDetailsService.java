@@ -22,11 +22,15 @@ public class MyUserDetailsService implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Users user = repo.findByUsername(username);
+        
+        // If not found by username, try to find by email (for OAuth2 users)
+        if (user == null) {
+            user = repo.findByEmail(username);
+        }
 
-
-        if (user==null){
-            System.out.println("User Not Found.");
-            throw new UsernameNotFoundException("User Not Found.");
+        if (user == null){
+            System.out.println("User Not Found: " + username);
+            throw new UsernameNotFoundException("User Not Found: " + username);
         }
         return new UserPrincipal(user);
     }

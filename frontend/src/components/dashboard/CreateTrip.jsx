@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from '@/hooks/use-toast';
 
 const CreateTrip = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [stops, setStops] = useState(['']);
   const [travelers, setTravelers] = useState(1);
   const [budget, setBudget] = useState(0);
@@ -17,6 +19,7 @@ const CreateTrip = () => {
   const [dateError, setDateError] = useState('');
   const [startingLocation, setStartingLocation] = useState('');
   const [finalDestination, setFinalDestination] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addStop = () => {
     setStops([...stops, '']);
@@ -51,34 +54,100 @@ const CreateTrip = () => {
     }
   };
 
-  const handleSaveTrip = () => {
+  const handleSaveTrip = async () => {
     if (startDate && endDate && !endDate.isAfter(startDate)) {
       setDateError('End date must be after start date');
       return;
     }
 
+    if (!startingLocation || !finalDestination) {
+      toast({
+        title: "Missing information",
+        description: "Please enter starting location and final destination.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Map frontend property names to match backend property names
     const tripData = {
-      startingLocation,
+      startLocation: startingLocation,
       stops: stops.filter(stop => stop.trim() !== ''),
-      finalDestination,
-      travelers,
+      endLocation: finalDestination,
+      numberOfTravelers: travelers,
       budget,
       startDate: startDate ? startDate.format('YYYY-MM-DD') : null,
       endDate: endDate ? endDate.format('YYYY-MM-DD') : null
     };
 
-    console.log('Saving trip data:', tripData);
+    try {
+      console.log("Sending trip data:", tripData);
+      
+      // Send trip data to backend
+      const response = await fetch('http://localhost:8080/api/trips', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(tripData),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
 
-    setStartingLocation('');
-    setStops(['']);
-    setFinalDestination('');
-    setTravelers(1);
-    setStartDate(null);
-    setEndDate(null);
-    setDateError('');
+      const result = await response.json();
+      console.log("Trip created successfully:", result);
+      
+      toast({
+        title: "Success!",
+        description: "Trip created successfully! AI insights are being generated.",
+      });
 
-    navigate('/dashboard');
+      // Reset form
+      setStartingLocation('');
+      setStops(['']);
+      setFinalDestination('');
+      setTravelers(1);
+      setBudget(0);
+      setStartDate(null);
+      setEndDate(null);
+      setDateError('');
+
+      // Navigate to dashboard
+      navigate('/dashboard');
+      
+      // Show additional success notification
+      toast({
+        title: "AI Processing",
+        description: "Your trip details are being analyzed by AI. Check the insights section shortly!",
+      });
+
+    } catch (error) {
+      console.error('Error saving trip:', error);
+      toast({
+        title: "Error",
+        description: `Failed to create trip: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Add budget field
+  const handleBudgetChange = (e) => {
+    const value = parseInt(e.target.value) || 0;
+    setBudget(Math.max(0, value));
+  };
+
+  // Rest of your component remains unchanged
+  // ...
 
   return (
     <div className="container mx-auto px-4 py-0">
@@ -174,6 +243,21 @@ const CreateTrip = () => {
               </div>
             </div>
 
+            {/* Budget */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Budget (USD)
+              </label>
+              <Input
+                type="number"
+                value={budget}
+                onChange={handleBudgetChange}
+                className="w-full"
+                min="0"
+                placeholder="Enter your budget"
+              />
+            </div>
+
             {/* Start Date */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -210,8 +294,9 @@ const CreateTrip = () => {
               <Button
                 onClick={handleSaveTrip}
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                disabled={isSubmitting}
               >
-                Create Trip
+                {isSubmitting ? 'Creating...' : 'Create Trip'}
               </Button>
             </div>
           </div>
@@ -221,4 +306,4 @@ const CreateTrip = () => {
   );
 };
 
-export default CreateTrip; 
+export default CreateTrip;

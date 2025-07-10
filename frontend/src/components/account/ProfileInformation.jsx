@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
 import { FiUser, FiMail } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast'; // If you're using a toast system
+import { api } from '@/lib/api';
 
 export default function ProfileInformation({ formData, setFormData, isEditing, setIsEditing }) {
+  const { toast } = useToast(); // optional, for user feedback
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -12,11 +17,49 @@ export default function ProfileInformation({ formData, setFormData, isEditing, s
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    setIsEditing(false);
+
+    try {
+      const response = await api.updateProfile({
+        name: formData.name,
+        email: formData.email,
+        profilePictureUrl: formData.profilePictureUrl || ''
+      });
+
+      toast?.({
+        title: 'Profile Updated',
+        description: 'Your profile was successfully updated.',
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      toast?.({
+        title: 'Error',
+        description: 'Could not update profile. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.getProfile();
+
+        setFormData({
+          name: response.data.name,
+          email: response.data.email,
+          profilePictureUrl: response.data.profilePictureUrl || '',
+        });
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [setFormData]);
 
   return (
     <Card>
