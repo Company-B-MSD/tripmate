@@ -1,0 +1,88 @@
+### Profile Management Testing with REST Client
+### Install REST Client extension in VS Code to use this file
+
+@baseUrl = http://localhost:8080
+@token = 
+
+### 1. Register User
+POST {{baseUrl}}/api/register
+Content-Type: application/json
+
+{
+  "username": "restclientuser",
+  "password": "password123",
+  "email": "rest@example.com",
+  "name": "REST Client User"
+}
+
+### 2. Login (Copy token from response)
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "restclientuser",
+  "password": "password123"
+}
+
+### 3. Get Profile (Replace token above with actual token)
+GET {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+
+### 4. Update Profile
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated REST User",
+  "email": "updated.rest@example.com",
+  "profilePictureUrl": "https://via.placeholder.com/150"
+}
+
+### 5. Get Profile Stats
+GET {{baseUrl}}/api/profile/stats
+Authorization: Bearer {{token}}
+
+### 6. Change Password
+POST {{baseUrl}}/api/profile/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newrestpass456",
+  "confirmPassword": "newrestpass456"
+}
+
+### 7. Test Validation - Invalid Email
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "invalid-email"
+}
+
+### 8. Test Validation - Empty Name
+PUT {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+### 9. Test OAuth2 - Google Login
+### Open this URL in browser: http://localhost:8080/oauth2/authorization/google
+
+### 10. Test OAuth2 - GitHub Login  
+### Open this URL in browser: http://localhost:8080/oauth2/authorization/github
+
+### 11. Delete Account (CAREFUL!)
+DELETE {{baseUrl}}/api/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "password": "newrestpass456"
+}
