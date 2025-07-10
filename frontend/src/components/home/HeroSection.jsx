@@ -127,14 +127,14 @@ export default function HeroSection() {
               transition={{ duration: 0.8, delay: 0.8 }}
               className="flex flex-col sm:flex-row gap-6 justify-center"
             >
-              <a href={isAuthenticated ? "/dashboard" : "/auth/signup"}>
+              <Link to={isAuthenticated ? "/planner" : "/auth/signin"}>
                 <Button 
                   size="lg" 
                   className="bg-accent hover:bg-accent/90 text-accent-foreground transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-lg px-8 py-6"
                 >
                   {isAuthenticated ? "Plan Your Trip" : "Start Planning for Free"}
                 </Button>
-              </a>
+              </Link>
               
               <HashLink smooth to="/#how-it-works">
                 <Button 
