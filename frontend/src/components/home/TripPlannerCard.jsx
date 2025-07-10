@@ -16,40 +16,22 @@ export default function TripPlannerCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!isAuthenticated) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to plan your trip",
-      });
-      navigate("/auth/signin");
-      return;
-    }
 
-    // Mock submission
-    setIsLoading(true);
-    try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Store query in localStorage for dashboard demo
-      localStorage.setItem('lastTripQuery', tripQuery);
-      
-      toast({
-        title: "Success!",
-        description: "Your trip plan is ready to view.",
-      });
-      
-      navigate("/dashboard");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // if (!isAuthenticated) {
+    //   toast({
+    //     title: "Sign in required",
+    //     description: "Please sign in to plan your trip",
+    //   });
+    //   navigate("/auth/signin");
+    //   return;
+    // }
+
+    navigate("/planner", {
+      state: { tripQuery },
+    });
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
   };
 
   return (
@@ -70,8 +52,8 @@ export default function TripPlannerCard() {
               className="flex-grow text-base"
               disabled={isLoading}
             />
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
               disabled={isLoading}
             >
@@ -80,13 +62,13 @@ export default function TripPlannerCard() {
               ) : (
                 <>
                   <Send className="h-5 w-5 mr-2" />
-                Plan Your Trip
+                  Plan Your Trip
                 </>
               )}
             </Button>
           </div>
           <p className="text-xs text-muted-foreground text-center">
-            {isAuthenticated 
+            {isAuthenticated
               ? "Tell us about your ideal trip duration and interests"
               : "Sign in to start planning your perfect trip!"}
           </p>
